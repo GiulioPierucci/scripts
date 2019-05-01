@@ -11,8 +11,9 @@ def create_spritesheet(image, singleRow):
     numLayers = len(layers)
 
     # Work out how many rows and columns we need for each of our layers/animation frames
-    numRows = 1 if singleRow else int(math.ceil(math.sqrt(numLayers)))
-    numCols = numLayers if singleRow else int(math.ceil(math.sqrt(numRows)))
+    size = int(math.ceil(math.sqrt(numLayers)))
+    numRows = 1 if singleRow else size
+    numCols = numLayers if singleRow else size
 
     # And then determine the size of our new image based on the number of rows and columns
     newImgWidth = image.width * numCols
