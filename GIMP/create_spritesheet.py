@@ -10,9 +10,13 @@ def create_spritesheet(image, singleRow):
     layers = image.layers
     numLayers = len(layers)
 
+    # Calculate stepwidth for the progress bar
+    stepWidth = numLayers/100
+
     # Work out how many rows and columns we need for each of our layers/animation frames
-    numRows = 1 if singleRow else int(math.ceil(math.sqrt(numLayers)))
-    numCols = numLayers if singleRow else int(math.ceil(math.sqrt(numRows)))
+    size = int(math.ceil(math.sqrt(numLayers)))
+    numRows = 1 if singleRow else size
+    numCols = numLayers if singleRow else size
 
     # And then determine the size of our new image based on the number of rows and columns
     newImgWidth = image.width * numCols
@@ -51,6 +55,9 @@ def create_spritesheet(image, singleRow):
             # Move the floating layer into the correct position
             pdb.gimp_layer_translate(floatingLayer, xOffset, yOffset)
 
+            # Update the progress bar
+            pdb.gimp_progress_update(float(numLayers - layerIndex)/float(numLayers))
+
             # Move to the next layer, unless we're all done in which case exit!
             layerIndex = (layerIndex - 1)
             if layerIndex < 0:
@@ -62,6 +69,10 @@ def create_spritesheet(image, singleRow):
     # Create and show a new image window for our spritesheet
     gimp.Display(newImage)
     gimp.displays_flush()
+
+    # Set the progress bar to 100%
+    pdb.gimp_progress_update(1)
+
 
 # Register the plugin with Gimp so it appears in the filters menu
 register(
